@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views
+from hopper import views
 
 urlpatterns = [
-    path('hopper/', views.WodList.as_view()),
+    path('all/', views.get_all_wod),
+    path('', views.user_wod)
 ]
