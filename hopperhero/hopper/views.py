@@ -27,6 +27,6 @@ def user_wod(request):
             return Response(status.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == "GET":
-        wod = Wod.objects.filter(user_id=request.user.id)
+        wod = Wod.objects.filter(id=id)
         serializer = WodSerializer(wod, many=True)
         return Response(serializer.data)
