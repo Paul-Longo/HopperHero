@@ -17,7 +17,7 @@ def get_all_users(request):
 
 
 @api_view(['POST', 'GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_user(request, id):
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)

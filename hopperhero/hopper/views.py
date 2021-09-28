@@ -18,12 +18,12 @@ def get_all_wod(request):
 
 
 @api_view(['POST', 'GET'])
-@permission_classes([IsAuthenticated])
-def user_wod(request):
+@permission_classes([AllowAny])
+def get_wod(request, id):
     if request.method == 'POST':
         serializer = WodSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save(wod=request.wod)
             return Response(status.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == "GET":

@@ -3,5 +3,5 @@ from hopper import views
 
 urlpatterns = [
     path('all/', views.get_all_wod),
-    path('', views.user_wod)
+    path('<int:id>/', views.get_wod)
 ]
