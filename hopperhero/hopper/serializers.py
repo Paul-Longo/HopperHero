@@ -4,4 +4,4 @@ from .models import Wod
 class WodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wod
-        fields = ['id', 'name', 'description', 'likes']
+        fields = ['id', 'name', 'description']

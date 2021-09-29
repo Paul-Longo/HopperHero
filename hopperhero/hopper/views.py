@@ -8,6 +8,7 @@ from .serializers import WodSerializer
 from django.contrib.auth.models import User
 
 
+
 # Create your views here.
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -29,4 +30,19 @@ def get_wod(request, id):
     elif request.method == "GET":
         wod = Wod.objects.filter(id=id)
         serializer = WodSerializer(wod, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['POST', 'GET'])
+@permission_classes([AllowAny])
+def get_likes(request, id):
+    if request.method == 'POST':
+        serializer = WodSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(like=request.like)
+            return Response(status.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == "GET":
+        like = Wod.objects.filter(id=id)
+        serializer = WodSerializer(like, many=True)
         return Response(serializer.data)
