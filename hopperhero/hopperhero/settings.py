@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'authentication.apps.AuthenticationConfig',
     'hopper.apps.HopperConfig',
-    'users.apps.UserConfig',
 ]
 
 MIDDLEWARE = [
