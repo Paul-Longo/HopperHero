@@ -1,48 +1,50 @@
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.decorators import api_view, permission_classes
-from .models import Wod
-from .serializers import WodSerializer
-from django.contrib.auth.models import User
-
+from rest_framework.views import APIView
+from .models import Likes, Wod
+from .serializers import WodSerializer, LikesSerializer
 
 
 # Create your views here.
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def get_all_wod(request):
-    wod = Wod.objects.all()
-    serializer = WodSerializer(wod, many=True)
-    return Response(serializer.data)
+
+class AllWods(APIView):
+    def get(self, request):
+        wod = Wod.objects.all()
+        serializer = WodSerializer(wod, many=True)
+        return Response(serializer.data)
 
 
-@api_view(['POST', 'GET'])
-@permission_classes([AllowAny])
-def get_wod(request, id):
-    if request.method == 'POST':
+class WodsView(APIView):
+    def post(self, request):
         serializer = WodSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(wod=request.wod)
             return Response(status.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == "GET":
+
+    def get(self, request, id):
         wod = Wod.objects.filter(id=id)
         serializer = WodSerializer(wod, many=True)
         return Response(serializer.data)
 
 
-@api_view(['POST', 'GET'])
-@permission_classes([AllowAny])
-def get_likes(request, id):
-    if request.method == 'POST':
-        serializer = WodSerializer(data=request.data)
+class LikesView(APIView):
+    def post(self, request):
+        serializer = LikesSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(like=request.like)
-            return Response(status.data, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == "GET":
-        like = Wod.objects.filter(id=id)
-        serializer = WodSerializer(like, many=True)
+        
+    def delete(self, request, id):
+        likes = Likes.objects.get(pk=id)
+        likes.delete()
+        return Response(status=status.HTTP_200_OK)
+        
+
+class UserLikesView(APIView):
+    def get(self, request, id):
+        likes = Likes.objects.filter(user=id)
+        serializer = LikesSerializer(likes, many=True)
         return Response(serializer.data)
+
